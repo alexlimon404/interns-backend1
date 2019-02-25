@@ -18,12 +18,11 @@ class UserProfiles extends Migration
         {
             $table->increments('id');
             $table->string('name');
-            $table->integer('user_id')->unsigned();
-        });
-
-        Schema::table('user_profiles', function ($table)
-        {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->integer('user_id')->nullable(true)->unsigned();
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
     }
     /**
@@ -33,9 +32,6 @@ class UserProfiles extends Migration
      */
     public function down()
     {
-        Schema::table('user_profiles', function (Blueprint $table)
-        {
-
-        });
+        Schema::dropIfExists('user_profiles');
     }
 }

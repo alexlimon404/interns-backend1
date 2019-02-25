@@ -10,6 +10,10 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
+    /**
+     * Для запуска прописать команду
+     * php artisan db:seed --class=UsersTableSeeder
+     * */
     public function run()
     {
         for ($i = 1; $i < 16; $i++)
