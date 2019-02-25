@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V0;
 
 use Illuminate\Database\Eloquent\Model;
 use App\app\Models\User\UserProfile;
+use App\UserGroup;
+use App\UserGroups;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -189,4 +191,48 @@ class UserProfilesController extends Model
         DB::table('user_profiles')->where('id', $id)->delete();
         return response()->json(['success' => true]);
     }
+/*
+ * Task3
+ * */
+
+/**
+ * 1. POST api/v0/users/group
+ * */
+
+/**
+ * 2. GET api/v0/user/{userId}/groups
+ * */
+
+    public function getUserGroups($id)
+    {
+        $group = User::find($id);
+        if(!$group){
+            abort(404, "Группы у пользователя с id - $id не найдены");
+        }
+        $idGroup = UserGroup::from('user_groups')->where('user_id', $id)->get();
+
+        echo "<pre>";
+        var_dump($group);
+        echo "</pre>";
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'profiles' =>$idGroup
+            ]
+        ]);
+    }
+
+/**
+ *
+ * */
+
+/**
+ *
+ * */
+
+/**
+ *
+ * */
 }
+
+

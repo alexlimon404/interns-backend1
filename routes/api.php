@@ -53,3 +53,37 @@ Route::patch('v0/db/users/profile/{id}', 'V0\UserProfilesController@changeNameDB
 
 //10.роут DELETE api/v0/db/users/profile/{id}
 Route::delete('v0/db/users/profile/{id}', 'V0\UserProfilesController@delProfileDB');
+
+
+
+
+//task 3
+/* 1. добавляем группу
+ * name - string
+ * */
+Route::post('v0/users/group', 'V0\UserProfilesController@addGroup');
+/*
+ * 2. получаем группы пользователя
+ * */
+
+
+Route::group([
+    'prefix' => 'user_group'
+], function ()
+{
+    Route::get('v0/user/{userId}/groups', 'V0\UserProfilesController@getUserGroups');
+});
+
+Route::get('v0/user/{userId}/groups', 'V0\UserProfilesController@getUserGroups');
+/*
+ * удаляет группу
+ * */
+Route::delete('v0/users/groups/{groupId}', 'V0\UserProfilesController@delGroup');
+/*
+ * добавляет пользователя к группе
+ * */
+Route::post('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@addUsersInGroup');
+/*
+ * убирает пользователя из группы
+ * */
+Route::delete('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUsersInGroup');
