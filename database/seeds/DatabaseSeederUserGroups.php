@@ -22,7 +22,7 @@ class DatabaseSeederUserGroups extends Seeder
         {
             DB::table('user_groups')->insert([
                 'user_id' => $i,
-                'group_id' => $i + 1
+                'group_id' => $i + 3
             ]);
         }
     }

@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //1. роут GET api/v0/users/profile/{id}
 Route::get('v0/users/profile/{id}', 'V0\UserProfilesController@profileId');
 //2. роут GET api/v0/user/{userId}/profiles
-Route::get('v0/users/{userId}/profile', 'V0\UserProfilesController@userId');
+Route::get('v0/user/{userId}/profiles', 'V0\UserProfilesController@userId');
 
 /*3. возвращает все профили пользователя
  *   ..Параметры: 1. page обязательно >=1
@@ -66,24 +66,16 @@ Route::post('v0/users/group', 'V0\UserProfilesController@addGroup');
  * 2. получаем группы пользователя
  * */
 
-
-Route::group([
-    'prefix' => 'user_group'
-], function ()
-{
-    Route::get('v0/user/{userId}/groups', 'V0\UserProfilesController@getUserGroups');
-});
-
 Route::get('v0/user/{userId}/groups', 'V0\UserProfilesController@getUserGroups');
 /*
- * удаляет группу
+ * 3. удаляет группу
  * */
 Route::delete('v0/users/groups/{groupId}', 'V0\UserProfilesController@delGroup');
 /*
- * добавляет пользователя к группе
+ * 4. добавляет пользователя к группе
  * */
-Route::post('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@addUsersInGroup');
+Route::post('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@addUserInGroup');
 /*
- * убирает пользователя из группы
+ * 5. убирает пользователя из группы
  * */
-Route::delete('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUsersInGroup');
+Route::get('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUserInGroup');

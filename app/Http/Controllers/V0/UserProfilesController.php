@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers\V0;
 
-use Illuminate\Database\Eloquent\Model;
 use App\app\Models\User\UserProfile;
 use App\UserGroup;
 use App\UserGroups;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
-class UserProfilesController extends Model
+class UserProfilesController extends Controller
 {
+    public static function transformCollection($data, string $dataName)
+    {
+        return [
+            'success' => true,
+            'data' => [
+                $dataName => $data,
+            ]
+        ];
+    }
+
 /**
  * 1. роут GET api/v0/users/profile/{id}
  * */
@@ -191,7 +201,11 @@ class UserProfilesController extends Model
         DB::table('user_profiles')->where('id', $id)->delete();
         return response()->json(['success' => true]);
     }
+
 /*
+ *
+ *
+ *
  * Task3
  * */
 
@@ -199,40 +213,71 @@ class UserProfilesController extends Model
  * 1. POST api/v0/users/group
  * */
 
+    public function addGroup(Request $request)
+    {
+        $newGroup = new UserGroup;
+        $newGroup->name = $request->get('name');
+        $newGroup->save();
+        return response()->json(["success" => true]);
+    }
+
+
+
 /**
+ * @param $id
+ * @return \Illuminate\Http\JsonResponse
  * 2. GET api/v0/user/{userId}/groups
  * */
-
     public function getUserGroups($id)
     {
-        $group = User::find($id);
-        if(!$group){
+        $idUserInGroup = UserGroups::where('user_id', $id)->firstOrFail();
+        if(!$idUserInGroup){
             abort(404, "Группы у пользователя с id - $id не найдены");
         }
-        $idGroup = UserGroup::from('user_groups')->where('user_id', $id)->get();
+        $idGroups = UserGroups::where('user_id', $id)->get();
+        $idGroup = [];
+        foreach ($idGroups as $group) {
+            array_push($idGroup, $group->group_id);
+        }
+        $userGroups = UserGroup::find($idGroup);
+        return response()->json(UserProfilesController::transformCollection($userGroups, 'groups'));
 
-        echo "<pre>";
-        var_dump($group);
-        echo "</pre>";
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'profiles' =>$idGroup
-            ]
-        ]);
+    }
+/**
+ * 3. удаляет группу
+ * url v0/users/groups/{groupId}
+ * */
+
+    public function delGroup (UserGroup $group)
+    {
+        $group->delete();
+        return response()->json(["success" => true]);
     }
 
 /**
+ * 4. добавляет пользователя к группе
+ * url v0/user/{userId}/group/{groupId}
+ * */
+    public function addUserInGroup(User $user, UserGroup $group)
+    {
+        $userToGroup = new UserGroups;
+        $userToGroup->user_id = $user->id;
+        $userToGroup->group_id = $group->id;
+        $userToGroup->save();
+        return response()->json(['success' => true]);
+    }
+
+/**
+ * 5. убирает пользователя из группы
+ * url v0/user/{userId}/group/{groupId}
  *
  * */
 
-/**
- *
- * */
+    public function delUserInGroup(User $userId, UserGroup $groupId)
+    {
+        $userInGroup = UserGroups::where('user_id', $userId->id)->where('group_id', $groupId->id)->get();
+        $userInGroup->delete();
+        return response()->json(["success" => true]);
 
-/**
- *
- * */
+    }
 }
-
-
