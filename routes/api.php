@@ -54,8 +54,7 @@ Route::patch('v0/db/users/profile/{id}', 'V0\UserProfilesController@changeNameDB
 //10.роут DELETE api/v0/db/users/profile/{id}
 Route::delete('v0/db/users/profile/{id}', 'V0\UserProfilesController@delProfileDB');
 
-
-
+//TODO:test
 
 //task 3
 /* 1. добавляем группу
@@ -87,16 +86,9 @@ Route::get('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUse
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
 {
-/*
- * 1. GET api/v1/auth/login
- * email - string
- * password - string
- * */
 
     Route::get('auth/login/{email}/{pass}', 'V1\AuthorizedController@emailPass');
-    Route::get('auth/login/logout/{api}', 'V1\AuthorizedController@newApi');
-
-
+    Route::get('auth/logout/{api}', 'V1\AuthorizedController@takeNewApi');
 
 
 });

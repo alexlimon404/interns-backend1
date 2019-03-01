@@ -14,3 +14,6 @@ $task4.0
 -сделан первый роут
 -генерация UserApi 15 шт
  `php artisan db:seed --class=UserApi`
+ task4.1
+-Исправлена ошибка в первом роуте
++update migration 
