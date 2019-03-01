@@ -8,3 +8,9 @@ task3
 `php artisan db:seed --class=DatabaseSeederUserGroup`
 генерация DatabaseSeederUserGroups 25 шт
 `php artisan db:seed --class=DatabaseSeederUserGroups`
+
+$task4.0
+-добавлены колонки
+-сделан первый роут
+-генерация UserApi 15 шт
+ `php artisan db:seed --class=UserApi`

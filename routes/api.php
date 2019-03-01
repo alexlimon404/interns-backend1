@@ -79,3 +79,24 @@ Route::post('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@addUs
  * 5. убирает пользователя из группы
  * */
 Route::get('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUserInGroup');
+
+
+/*
+ * Api v1
+ * */
+
+Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
+{
+/*
+ * 1. GET api/v1/auth/login
+ * email - string
+ * password - string
+ * */
+
+    Route::get('auth/login/{email}/{pass}', 'V1\AuthorizedController@emailPass');
+    Route::get('auth/login/logout/{api}', 'V1\AuthorizedController@newApi');
+
+
+
+
+});
