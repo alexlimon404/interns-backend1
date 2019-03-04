@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\V1;
 
 use App\User;
-use App\app\Models\User\UserProfile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use BenSampo\Enum\Rules\EnumKey;
+use App\Enums\UserType;
 
 class AuthorizedController extends Controller
 {
-
-    /*
+    /**
      * 1. GET api/v1/auth/login
      * нужно вернуть api_token из таблицы users
      * если комбинация email & пароля неправильная, вернуть: 401 - Unauthorized
-     * 
      * */
     public function emailPass($email, $pass)
     {
@@ -29,10 +28,12 @@ class AuthorizedController extends Controller
             ]
         ]);
     }
-    /*
+    /**
      * 2. GET api/v1/auth/logout
      * нужно найти юзера по токену (если не найден вернуть 404)
      * затем обновить этот токен через str_random и вернуть true
+     * @return JSON
+     *
      * */
 
     public function takeNewApi($api)
@@ -48,5 +49,44 @@ class AuthorizedController extends Controller
             "success" => true,
         ]);
     }
+    /**
+     * 3. GET api/v1/users?=API
+     *
+     * @return JSON
+     * */
 
+    public function users ()
+    {
+        $perPage = 5;
+        $users = User::paginate($perPage)->except([]);
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "users" => $users
+            ],
+        ]);
+    }
+
+    /**
+     * 4. PATCH api/v1/user/{userId}
+     * @return JSON
+     * */
+    public function updateInfoUsers(User $user, Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|string',
+            'role' => ['required', new EnumKey(UserType::class)],
+            'banned' => 'required|boolean',
+        ]);
+        $user->name = $request->get('name');
+        $user->role = $request->get('role');
+        $user->banned = $request->get('banned');
+        $user->save();
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "user" => $user,
+            ],
+        ]);
+    }
 }

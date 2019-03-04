@@ -15,7 +15,7 @@ class AddColumnToUser extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('api_token', 30)->unique()->nullable()->default(null);
-            $table->boolean('banned')->nullable();
+            $table->boolean('banned')->nullable()->default(false);;
             $table->enum('role', ['User', 'Admin'])->default('User');
         });
     }

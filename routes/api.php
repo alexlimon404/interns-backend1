@@ -86,9 +86,12 @@ Route::get('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUse
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
 {
-
     Route::get('auth/login/{email}/{pass}', 'V1\AuthorizedController@emailPass');
     Route::get('auth/logout/{api}', 'V1\AuthorizedController@takeNewApi');
 
+    Route::group(['middleware' => ['auth:api', 'admin_only', 'stop_banned']], function () {
+        Route::get('users', 'V1\AuthorizedController@users');
+        Route::patch('user/{userId}', 'V1\AuthorizedController@updateInfoUsers');
+    });
 
 });

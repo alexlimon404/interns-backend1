@@ -48,7 +48,6 @@ class UserProfilesController extends Controller
             abort(404, "Пользователь с id = $userId не найден");
         }
         $userProfiles = UserProfile::where('user_id', $userId)->get();
-        //var_dump($userProfiles);
         return response()->json([
             'success' => true,
             'data' => [
@@ -113,11 +112,9 @@ class UserProfilesController extends Controller
 /**
  * 6.роут GET api/v0/db/users/profile/{id}
  * */
-
     public function profileIdDB($id)
     {
         $userProfiles = DB::table('user_profiles')->where('id', $id)->first();
-        //var_dump($userProfiles);
         if (!$userProfiles) {
             abort(404, "Профиль с id = $id не найден");
         }
@@ -134,7 +131,6 @@ class UserProfilesController extends Controller
     public function userIdDB($usersId)
     {
         $userProfiles = DB::table('user_profiles')->where('users_id', $usersId)->first();
-        //var_dump($userProfiles);
         if (!$userProfiles) {
             abort(404, "user id - $usersId не найдена");
         }
@@ -203,9 +199,6 @@ class UserProfilesController extends Controller
     }
 
 /*
- *
- *
- *
  * Task3
  * */
 
@@ -220,8 +213,6 @@ class UserProfilesController extends Controller
         $newGroup->save();
         return response()->json(["success" => true]);
     }
-
-
 
 /**
  * @param $id
@@ -241,13 +232,11 @@ class UserProfilesController extends Controller
         }
         $userGroups = UserGroup::find($idGroup);
         return response()->json(UserProfilesController::transformCollection($userGroups, 'groups'));
-
     }
 /**
  * 3. удаляет группу
  * url v0/users/groups/{groupId}
  * */
-
     public function delGroup (UserGroup $group)
     {
         $group->delete();

@@ -18,3 +18,6 @@ Route::get('/', function () {
 Route::get('task1/hello_world', 'Task1\Task1Controller@helloWorld');
 Route::get('task1/uuid', 'Task1\Task1Controller@uuid');
 Route::get('task1/data_from_config', 'Task1\Task1Controller@dataFromConfig');
+//Auth::routes();
+
+//Route::get('/home', 'HomeController@index')->name('home');
