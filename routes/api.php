@@ -94,4 +94,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
         Route::patch('user/{userId}', 'V1\AuthorizedController@updateInfoUsers');
     });
 
+    /*task5
+     * */
+    Route::get('github/{userName}/{repositoryName}/issues', 'V1\GitHubController@issues');
+
 });
