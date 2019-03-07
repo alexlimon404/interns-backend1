@@ -88,7 +88,7 @@ class GitHubController extends Controller
                 "name" => $userName,
                 "description" => $rep->description
             ];
-            array_push($issuesArr, $data);
+            array_push($repositoriesArr, $data);
         }
         return response()->json([
             "success" => true,
