@@ -10,6 +10,10 @@ use App\Http\Controllers\Controller;
 
 class GitHubController extends Controller
 {
+/*
+ * 1. GET api/v1/github/{userName}/{repositoryName}/issues
+ *
+ * */
     public function issues($userName, $repositoryName)
     {
         $user = DB::table('github_users')->where('username', $userName)->first();
@@ -68,4 +72,30 @@ class GitHubController extends Controller
                 ]);
             }
     }
+/*
+ * 2. GET api/v1/github/{userName}/repositories
+ * */
+    public function userNameRepositories($userName)
+    {
+        $user = GitHubUsers::where('username', $userName)->firstOrFail();
+        $perPage = 10;
+        $repositories = GitHubRepositories::where('github_user_id', $user->id)->paginate($perPage)->items();
+        $repositoriesArr = [];
+        foreach ($repositories as $rep) {
+            $data = [
+                "id" => $rep->id,
+                "github_id" => $rep->github_id,
+                "name" => $userName,
+                "description" => $rep->description
+            ];
+            array_push($issuesArr, $data);
+        }
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "issues" => $repositoriesArr
+            ]
+        ]);
+    }
+
 }

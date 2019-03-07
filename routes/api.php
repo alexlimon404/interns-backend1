@@ -97,5 +97,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
     /*task5
      * */
     Route::get('github/{userName}/{repositoryName}/issues', 'V1\GitHubController@issues');
+    Route::get('github/{userName}/repositories', 'V1\GitHubController@userNameRepositories');
+
+
 
 });
