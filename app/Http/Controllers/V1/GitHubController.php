@@ -93,9 +93,42 @@ class GitHubController extends Controller
         return response()->json([
             "success" => true,
             "data" => [
-                "issues" => $repositoriesArr
+                "repositories" => $repositoriesArr
             ]
         ]);
     }
+/*
+ * 3. GET api/v1/github/{userName}/issues/search
+ * */
+
+    public function issuesSearch($userName, Request $param)
+    {
+        $user = GitHubUsers::where('username', $userName)->firstOrFail();
+        $repositories = GitHubRepositories::where('github_user_id', $user->id)->get();
+        $githubId = [];
+        foreach ($repositories as $rep) {
+            $data = ["github_id" => $rep->github_id];
+            array_push($githubId, $data);
+        }
+        $issuesSearch = [];
+        foreach ($githubId as $id) {
+            $data = GitHubIssues::where('github_id', $id)->where('title', 'LIKE', "%$param->title%")->where('number', $param->number)->where('state', "$param->state")->get();
+            array_push($issuesSearch, $data);
+        }
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "issues" => $issuesSearch
+            ]
+        ]);
+    }
+/*
+ * 4. GET api/v1/github/{userName}/repositories/search
+ * */
+    public function repositoriesSearch($userName, Request $param)
+    {
+
+    }
+
 
 }
