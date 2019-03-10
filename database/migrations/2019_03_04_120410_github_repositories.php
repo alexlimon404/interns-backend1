@@ -15,7 +15,7 @@ class GithubRepositories extends Migration
     {
         Schema::create('github_repositories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('github_id');
+            $table->integer('github_id')->nullable();
             $table->integer('github_user_id')->unsigned()->nullable();
             $table->foreign('github_user_id')
                 ->references('id')

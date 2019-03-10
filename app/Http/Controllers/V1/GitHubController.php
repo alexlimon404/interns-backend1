@@ -4,9 +4,13 @@ namespace App\Http\Controllers\V1;
 use App\Models\GitHub\GitHubRepositories;
 use App\Models\GitHub\GitHubUsers;
 use App\Models\GitHub\GitHubIssues;
+use App\Http\Requests\v1\GitHubApiRequest;
+use App\Http\Requests\v1\GitHubIssuesSearchRequest;
+use App\Http\Requests\v1\GitHubRepositoriesSearchRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Support\GitHubApiFunc;
 
 class GitHubController extends Controller
 {
@@ -14,121 +18,127 @@ class GitHubController extends Controller
  * 1. GET api/v1/github/{userName}/{repositoryName}/issues
  *
  * */
-    public function issues($userName, $repositoryName)
+    public function issues($userName, $repositoryName, GitHubApiRequest $request)
     {
-        $user = DB::table('github_users')->where('username', $userName)->first();
-        $repositories = DB::table('github_repositories')->where('name', $repositoryName)->get();
-        //ищем значения в базе данных
-        if (!empty($user and $repositories)) {
-            $issuesArr = [];
-            foreach ($repositories as $repositori) {
-            $data = GitHubIssues::where('github_id', $repositori->github_id)->get();
-            array_push($issuesArr, $data);
-            }
+        $fromDb = $request->get('fromDb');
+        $page = $request->get('page');
+        $perPage = $request->get('perPage');
+        //если true то ищем в базе, если false идем на github
+        if ($fromDb) {
+            $result = GitHubApiFunc::getIssues($userName, $repositoryName);
             return response()->json([
                 "success" => true,
                 "data" => [
-                    "issues" =>  $issuesArr
+                    "issues" => GitHubApiFunc::paginate($result, $perPage, $page, ['data'])
                 ]
             ]);
         } else {
-            //если нету, идём на github
             $client = new \Github\Client();
             //получаем issues c github
             $issues = $client->api('issue')->all($userName, $repositoryName, array());
-            //запись нового user'a
-            $newUser = GitHubUsers::firstOrCreate(['username' => $userName]);
-            //запись нового repositories
-            $repositories=[];
-                foreach ($issues as $github_id) {
-                    $repositoriesData = GitHubRepositories::firstOrCreate(['github_id'=> $github_id['id'], 'name' => $repositoryName, 'github_user_id' => $newUser->id]);
-                    array_push($repositories, $repositoriesData);
-                }
-                //запись нового issues
-                foreach ($issues as $issue) {
-                    GitHubIssues::firstOrCreate([
-                        'github_id' => $issue['id'],
-                        'title' =>$issue['title'],
-                        'number' => $issue['number'],
-                        'state' => $issue['state']
-                        ]);
-                }
-                //дописываем в issues -> repository_id
-                foreach ($repositories as $repository) {
-                     GitHubIssues::updateOrCreate(['github_id' =>$repository->github_id], ['repository_id' => $repository->id]);
-                }
-                //выводим результат записи
-                $repositoriesName = DB::table('github_repositories')->where('name', $repositoryName)->get();
-                $issuesArr = [];
-                foreach ($repositoriesName as $repo) {
-                    $data = GitHubIssues::where('github_id', $repo->github_id)->get();
-                    array_push($issuesArr, $data);
-                }
+            //пишем в бд Issues
+            GitHubApiFunc::createNewIssues($userName, $issues, $repositoryName);
+            //выводим результат записи
+            $result = GitHubApiFunc::getIssues($userName, $repositoryName);
                 return response()->json([
-                    "success" => true,
-                    "data" => [
-                        "issues" => $issuesArr
-                    ]
-                ]);
-            }
+                "success" => true,
+                "data" => [
+                    "issues" => GitHubApiFunc::paginate($result, $perPage, $page, ['data'])
+                ]
+            ]);
+        }
     }
 /*
  * 2. GET api/v1/github/{userName}/repositories
  * */
-    public function userNameRepositories($userName)
+    public function userNameRepositories($userName, GitHubApiRequest $request)
     {
-        $user = GitHubUsers::where('username', $userName)->firstOrFail();
-        $perPage = 10;
-        $repositories = GitHubRepositories::where('github_user_id', $user->id)->paginate($perPage)->items();
-        $repositoriesArr = [];
-        foreach ($repositories as $rep) {
-            $data = [
-                "id" => $rep->id,
-                "github_id" => $rep->github_id,
-                "name" => $userName,
-                "description" => $rep->description
-            ];
-            array_push($repositoriesArr, $data);
+        $fromDb = $request->get('fromDb');
+        $page = $request->get('page');
+        $perPage = $request->get('perPage');
+        if ($fromDb) {
+            $result = GitHubApiFunc::getRepositories($userName);
+            return response()->json([
+                "success" => true,
+                "data" => [
+                    "repositories" => GitHubApiFunc::paginate($result, $perPage, $page, ['data'])
+                ]
+            ]);
+        } else {
+            $client = new \Github\Client();
+            //получаем issues c github
+            $repos = $client->api('user')->repositories($userName);
+            //запись user и repositories
+            GitHubApiFunc::createNewRepositories($repos, $userName);
+            $result = GitHubApiFunc::getRepositories($userName);
+            return response()->json([
+                "success" => true,
+                "data" => [
+                    "repositories" => GitHubApiFunc::paginate($result, $perPage, $page, ['data'])
+                ]
+            ]);
         }
-        return response()->json([
-            "success" => true,
-            "data" => [
-                "repositories" => $repositoriesArr
-            ]
-        ]);
     }
 /*
  * 3. GET api/v1/github/{userName}/issues/search
  * */
-
-    public function issuesSearch($userName, Request $param)
+    public function issuesSearch($userName, GitHubIssuesSearchRequest $request)
     {
-        $user = GitHubUsers::where('username', $userName)->firstOrFail();
-        $repositories = GitHubRepositories::where('github_user_id', $user->id)->get();
-        $githubId = [];
-        foreach ($repositories as $rep) {
-            $data = ["github_id" => $rep->github_id];
-            array_push($githubId, $data);
+        $fromDb = $request->get('fromDb');
+        $page = $request->get('page');
+        $perPage = $request->get('perPage');
+        if($fromDb) {
+            return response()->json([
+                "success" => true,
+                "data" => [
+                    "issues" => GitHubApiFunc::findInIssuesForAllRepositories($userName,$request)
+                ]
+            ]);
+        } else {
+            $client = new \Github\Client();
+            //получаем repositories c github
+            $repos = $client->api('user')->repositories($userName);
+            //записываем user и repositories
+            $repositories = GitHubApiFunc::createNewRepositories($repos, $userName);
+            //запись всех issues для всех repositories
+            GitHubApiFunc::createNewIssuesForAllRepositories($repositories, $client, $userName);
+            return response()->json([
+                "success" => true,
+                "data" => [
+                    "issues" => GitHubApiFunc::findInIssuesForAllRepositories($userName,$request)
+                ]
+            ]);
         }
-        $issuesSearch = [];
-        foreach ($githubId as $id) {
-            $data = GitHubIssues::where('github_id', $id)->where('title', 'LIKE', "%$param->title%")->where('number', $param->number)->where('state', "$param->state")->get();
-            array_push($issuesSearch, $data);
-        }
-        return response()->json([
-            "success" => true,
-            "data" => [
-                "issues" => $issuesSearch
-            ]
-        ]);
     }
 /*
  * 4. GET api/v1/github/{userName}/repositories/search
  * */
-    public function repositoriesSearch($userName, Request $param)
+    public function repositoriesSearch($userName, GitHubRepositoriesSearchRequest $request)
     {
-
+        $fromDb = $request->get('fromDb');
+        $page = $request->get('page');
+        $perPage = $request->get('perPage');
+        if($fromDb) {
+            $result = GitHubApiFunc::findInRepositories($userName, $request);
+            return response()->json([
+                "success" => true,
+                "data" => [
+                    "issues" => GitHubApiFunc::paginate($result, $perPage, $page, ['data'])
+                ]
+            ]);
+        } else {
+            $client = new \Github\Client();
+            //получаем repositories c github
+            $repos = $client->api('user')->repositories($userName);
+            //записываем user и repositories
+            GitHubApiFunc::createNewRepositories($repos, $userName);
+            $result = GitHubApiFunc::findInRepositories($userName, $request);
+            return response()->json([
+                "success" => true,
+                "data" => [
+                    "repositories" => GitHubApiFunc::paginate($result, $perPage, $page, ['data'])
+                ]
+            ]);
+        }
     }
-
-
 }
