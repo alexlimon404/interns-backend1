@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = "users";
+    //protected $table = "users";
 
     /**
      * The attributes that are mass assignable.
@@ -30,14 +30,8 @@ class User extends Authenticatable
         'password', 'remember_token', 'created_at', 'updated_at', 'email_verified_at', 'api_token'
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    //public $incrementing = false;
+    public function groups()
+    {
+        return $this->belongsToMany('App\UserGroup', 'user_groups', 'user_id', 'group_id');
+    }
 }
