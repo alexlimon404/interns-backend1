@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\V0;
 
 use App\app\Models\User\UserProfile;
+use App\Mail\UpdateProfileAlertEmail;
 use App\UserGroup;
 use App\UserGroups;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\AlertEmail;
+use Illuminate\Support\Facades\Queue;
+use App\Mail\AddGroupUserAlertEmail;
+
 
 class UserProfilesController extends Controller
 {
@@ -81,15 +86,22 @@ class UserProfilesController extends Controller
  * */
     public function changeName($id, Request $request)
     {
+
         $name = $request->get('name');
         $userProfiles = UserProfile::find($id);
+        //dd($userProfiles->name);
+        //dd($id);
         if (!$userProfiles){
             abort(404, "Профиль с id = $id не найден");
         }
         if (!$name){
             abort(400, "Имя не было передано!");
         }
-        $userProfiles->name = $name->save();
+        $oldName = $userProfiles->name;
+        $userProfiles->name = $name;
+        $userProfiles->save();
+        $addProfileAlert = new UpdateProfileAlertEmail($oldName, $name, $id);
+        Queue::push(new AlertEmail($addProfileAlert));
         return response()->json([
             "success" => true,
             "data"    => [
@@ -211,6 +223,8 @@ class UserProfilesController extends Controller
         $newGroup = new UserGroup;
         $newGroup->name = $request->get('name');
         $newGroup->save();
+        $addGroupAlert = new AddGroupUserAlertEmail($newGroup);
+        Queue::push(new AlertEmail($addGroupAlert));
         return response()->json(["success" => true]);
     }
 

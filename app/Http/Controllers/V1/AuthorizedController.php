@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Mail\UpdateUserDataAlertEmail;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use BenSampo\Enum\Rules\EnumKey;
 use App\Enums\UserType;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\AlertEmail;
+use Illuminate\Support\Facades\Hash;
 
 class AuthorizedController extends Controller
 {
@@ -15,21 +19,24 @@ class AuthorizedController extends Controller
      * нужно вернуть api_token из таблицы users
      * если комбинация email & пароля неправильная, вернуть: 401 - Unauthorized
      * */
-    public function emailPass($email, $pass)
+    public function emailPass(Request $request)
     {
-        if (!User::where('email', $email)->where('password', $pass)->firstOrFail()) {
-            abort(401, "Unauthorized");
-        }
-        $api = User::where('email', $email)->where('password', $pass)->get();
+        $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+        $user = User::where('email', $request->email)->firstOrFail();
+        if(!Hash::check($request->password, $user->password))
+            abort(401, 'Unauthorized');
         return response()->json([
             "success" => true,
             "data" => [
-                "token" =>  $api[0]['api_token']
+                "token" =>  $user->api_token
             ]
         ]);
     }
     /**
-     * 2. GET api/v1/auth/logout
+     * 2. GET api/v1/auth/logout/{api}
      * нужно найти юзера по токену (если не найден вернуть 404)
      * затем обновить этот токен через str_random и вернуть true
      * @return JSON
@@ -41,8 +48,8 @@ class AuthorizedController extends Controller
         if (!User::where('api_token', $api)->firstOrFail()) {
             abort(404, "токен не найден");
         }
-        $userId = User::where('api_token', $api)->get();
-        $newApi = User::find($userId[0]['id']);
+        $userId = User::where('api_token', $api)->firstOrFail();
+        $newApi = User::where('id', $userId->id)->firstOrFail();
         $newApi->api_token = str_random(30);
         $newApi->save();
         return response()->json([
@@ -58,7 +65,7 @@ class AuthorizedController extends Controller
     public function users ()
     {
         $perPage = 5;
-        $users = User::paginate($perPage)->except([]);
+        $users = User::paginate($perPage);
         return response()->json([
             "success" => true,
             "data" => [
@@ -71,17 +78,22 @@ class AuthorizedController extends Controller
      * 4. PATCH api/v1/user/{userId}
      * @return JSON
      * */
-    public function updateInfoUsers(User $user, Request $request)
+    public function updateInfoUsers($id, Request $request)
     {
+        $admin = User::where('api_token', $request->api_token)->firstOrFail();
         $this->validate($request, [
             'name' => 'required|string',
             'role' => ['required', new EnumKey(UserType::class)],
             'banned' => 'required|boolean',
         ]);
+        $oldDataUser = User::find($id);
+        $user = User::find($id);
         $user->name = $request->get('name');
         $user->role = $request->get('role');
         $user->banned = $request->get('banned');
         $user->save();
+        $updateDataUser = new UpdateUserDataAlertEmail($oldDataUser, $user, $admin);
+        Queue::push(new AlertEmail($updateDataUser));
         return response()->json([
             "success" => true,
             "data" => [

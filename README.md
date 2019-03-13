@@ -29,3 +29,9 @@ task5.1
 -добавлен 4 роут
 -task6
 -done
+-task7
+-создали миграцию php artisan queue:table
+-создали 3 класса php artisan make:mail
+-Creating Jobs php artisan make:job
+-done
+-исправлены ошибки Task4

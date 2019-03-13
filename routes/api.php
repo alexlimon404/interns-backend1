@@ -54,8 +54,6 @@ Route::patch('v0/db/users/profile/{id}', 'V0\UserProfilesController@changeNameDB
 //10.роут DELETE api/v0/db/users/profile/{id}
 Route::delete('v0/db/users/profile/{id}', 'V0\UserProfilesController@delProfileDB');
 
-//TODO:test
-
 //task 3
 /* 1. добавляем группу
  * name - string
@@ -86,7 +84,7 @@ Route::get('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUse
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
 {
-    Route::get('auth/login/{email}/{pass}', 'V1\AuthorizedController@emailPass');
+    Route::get('auth/login', 'V1\AuthorizedController@emailPass');
     Route::get('auth/logout/{api}', 'V1\AuthorizedController@takeNewApi');
 
     Route::group(['middleware' => ['auth:api', 'admin_only', 'stop_banned']], function () {
@@ -100,9 +98,4 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function ()
     Route::get('github/{userName}/repositories', 'V1\GitHubController@userNameRepositories');
     Route::get('github/{userName}/issues/search', 'V1\GitHubController@issuesSearch');
     Route::get('github/{userName}/repositories/search', 'V1\GitHubController@repositoriesSearch');
-
-
-
-
-
 });
