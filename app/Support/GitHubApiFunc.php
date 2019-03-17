@@ -67,7 +67,6 @@ class GitHubApiFunc
         $repositories=[];
         foreach ($repos as $repo) {
             $data = GitHubRepositories::firstOrCreate(
-                //['github_id'=> $repo['id']],
                 ['github_id'=> $repo['id'],
                     'name' => $repo['name'],
                     'github_user_id' => $newUser->id,

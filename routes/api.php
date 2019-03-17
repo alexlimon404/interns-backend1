@@ -75,7 +75,7 @@ Route::post('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@addUs
 /*
  * 5. убирает пользователя из группы
  * */
-Route::get('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUserInGroup');
+Route::delete('v0/user/{userId}/group/{groupId}', 'V0\UserProfilesController@delUserInGroup');
 
 
 /*

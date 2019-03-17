@@ -10,4 +10,3 @@ class UserProfile extends Model
     protected $fillable = ['id', 'name', 'user_id'];
     public $timestamps = false;
 }
-

@@ -2,36 +2,61 @@
 `php artisan migrate`
 2. Для запуска генерации базы данных пишем команду:
 `php artisan db:seed --class=UsersTableSeeder`
-
-task3
-генерация DatabaseSeederUserGroup 15 шт
+***
+task 3.0
+---
+* генерация DatabaseSeederUserGroup 15 шт
 `php artisan db:seed --class=DatabaseSeederUserGroup`
-генерация DatabaseSeederUserGroups 25 шт
+* генерация DatabaseSeederUserGroups 25 шт
 `php artisan db:seed --class=DatabaseSeederUserGroups`
 
-$task4.0
--добавлены колонки
--сделан первый роут
--генерация UserApi 15 шт
+task 4.0
+---
+* добавлены колонки
+* сделан первый роут
+* генерация UserApi 15 шт
  `php artisan db:seed --class=UserApi`
- task4.1
--Исправлена ошибка в первом роуте
-+update migration 
+
+task 4.1
+--- 
+* Исправлена ошибка в первом роуте
+* update migration
+ 
 task4.2
--добавлен 3-4 роут
--исправлены ошибки
+---
+* добавлен 3-4 роут
+* исправлены ошибки
+
 task5.1
--добавлен второй роут
--task5.2
--добавлен 3 роут
--task5.3
--исправленны ошибки
--добавлен 4 роут
--task6
--done
--task7
--создали миграцию php artisan queue:table
--создали 3 класса php artisan make:mail
--Creating Jobs php artisan make:job
--done
--исправлены ошибки Task4
+---
+* добавлен второй роут
+
+task5.2
+---
+* добавлен 3 роут
+* task5.3
+* исправленны ошибки
+*добавлен 4 роут
+
+task6
+---
+* done
+
+task 7.0
+---
+* создали миграцию php artisan queue:table
+* создали 3 класса php artisan make:mail
+* creating Jobs php artisan make:job
+* done
+* исправлены ошибки Task4
+***
+task 8.0
+---
+Сделаны тесты для task3
+```
+//чистим базу и накатываем все миграции
+.\vendor\bin\phpunit ./tests/Feature/ClearBase.php
+.\vendor\bin\phpunit ./tests/Feature/Http/Controllers/UserControllerTests.php
+.\vendor\bin\phpunit --configuration phpunit.xml
+```
+---

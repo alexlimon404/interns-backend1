@@ -10,7 +10,7 @@ class GitHubIssues extends Model
 
     protected $fillable = [
         'github_id', 'state', 'title', 'number', 'repository_id'
-        ];
+    ];
 
     public $timestamps = false;
 

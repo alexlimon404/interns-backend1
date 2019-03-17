@@ -13,12 +13,11 @@ class AlertEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    //or php artisan queue:work --tries=3
+    //кол-во попыток отправить письмо
     public $tries = 5;
 
     public $message;
-    //or php artisan queue:work --tries=3
-    //кол-во попыток отправить письмо
-
     /**
      * Create a new job instance.
      *

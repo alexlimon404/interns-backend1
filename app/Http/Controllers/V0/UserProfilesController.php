@@ -26,7 +26,6 @@ class UserProfilesController extends Controller
             ]
         ];
     }
-
 /**
  * 1. роут GET api/v0/users/profile/{id}
  * */
@@ -86,11 +85,8 @@ class UserProfilesController extends Controller
  * */
     public function changeName($id, Request $request)
     {
-
         $name = $request->get('name');
         $userProfiles = UserProfile::find($id);
-        //dd($userProfiles->name);
-        //dd($id);
         if (!$userProfiles){
             abort(404, "Профиль с id = $id не найден");
         }
@@ -251,9 +247,9 @@ class UserProfilesController extends Controller
  * 3. удаляет группу
  * url v0/users/groups/{groupId}
  * */
-    public function delGroup (UserGroup $group)
+    public function delGroup (UserGroup $groupId)
     {
-        $group->delete();
+        $groupId->delete();
         return response()->json(["success" => true]);
     }
 
@@ -261,11 +257,11 @@ class UserProfilesController extends Controller
  * 4. добавляет пользователя к группе
  * url v0/user/{userId}/group/{groupId}
  * */
-    public function addUserInGroup(User $user, UserGroup $group)
+    public function addUserInGroup(User $userId, UserGroup $groupId)
     {
         $userToGroup = new UserGroups;
-        $userToGroup->user_id = $user->id;
-        $userToGroup->group_id = $group->id;
+        $userToGroup->user_id = $userId->id;
+        $userToGroup->group_id = $groupId->id;
         $userToGroup->save();
         return response()->json(['success' => true]);
     }
@@ -278,9 +274,8 @@ class UserProfilesController extends Controller
 
     public function delUserInGroup(User $userId, UserGroup $groupId)
     {
-        $userInGroup = UserGroups::where('user_id', $userId->id)->where('group_id', $groupId->id)->get();
+        $userInGroup = UserGroups::where('user_id', $userId->id)->where('group_id', $groupId->id);
         $userInGroup->delete();
         return response()->json(["success" => true]);
-
     }
 }

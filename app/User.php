@@ -10,8 +10,6 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    //protected $table = "users";
-
     /**
      * The attributes that are mass assignable.
      *
@@ -34,4 +32,5 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\UserGroup', 'user_groups', 'user_id', 'group_id');
     }
+
 }
