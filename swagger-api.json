@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "",
+    "description": "learn laravel",
     "version": "1.0.0",
-    "title": "Interns portal API"
+    "title": "interns-backend1"
   },
-  "host": "api.learn.2-up.ru",
-  "basePath": "/api/v1",
+  "host": "https://github.com/mirrorbitmirror/interns-backend1",
+  "basePath": "/api/v0",
   "tags": [
     {
       "name": "group",
@@ -60,7 +60,7 @@
                   "type": "object",
                   "properties": {
                     "create_group": {
-                      "$ref": "#/definitions/User"
+                      "$ref": "#/group"
                     }
                   }
                 }
@@ -103,8 +103,8 @@
                 "data": {
                   "type": "object",
                   "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
+                    "group": {
+                      "$ref": "#/group"
                     }
                   }
                 }
@@ -143,14 +143,6 @@
               "properties": {
                 "success": {
                   "type": "boolean"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
-                    }
-                  }
                 }
               }
             }
@@ -195,14 +187,6 @@
               "properties": {
                 "success": {
                   "type": "boolean"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
-                    }
-                  }
                 }
               }
             }
@@ -247,14 +231,6 @@
               "properties": {
                 "success": {
                   "type": "boolean"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
-                    }
-                  }
                 }
               }
             }
@@ -303,13 +279,16 @@
                 "data": {
                   "type": "object",
                   "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
+                    "data": {
+                      "$ref": "#/token"
                     }
                   }
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -343,17 +322,12 @@
               "properties": {
                 "success": {
                   "type": "boolean"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
-                    }
-                  }
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -399,8 +373,8 @@
                 "data": {
                   "type": "object",
                   "properties": {
-                    "create_group": {
-                      "$ref": "#/definitions/User"
+                    "user": {
+                      "$ref": "#/auth"
                     }
                   }
                 }
@@ -472,7 +446,7 @@
                   "type": "object",
                   "properties": {
                     "create_group": {
-                      "$ref": "#/definitions/User"
+                      "$ref": "#/auth"
                     }
                   }
                 }
@@ -483,132 +457,70 @@
       }
     }
   },
-  "definitions": {
-    "User": {
-      "type": "object",
-      "required": [
-        "login",
-        "email"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "example": 1
-        },
-        "name": {
-          "type": "string",
-          "example": "someuser"
-        },
-        "role": {
-          "type": "string",
-          "example": "User",
-          "enum": [
-            "Banned",
-            "User",
-            "Employee",
-            "Admin"
-          ]
-        },
-        "course": {
-          "$ref": "#/definitions/InternshipCourse"
-        }
+  "group": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "id": {
+        "type": "integer",
+        "format": "int64",
+        "example": 2
+      },
+      "name": {
+        "type": "string",
+        "example": "Group 1"
       }
-    },
-    "InternHomework": {
-      "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "example": 12
-        },
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "example": 12
-        },
-        "homework": {
-          "$ref": "#/definitions/Homework"
-        },
-        "github_uri": {
-          "type": "string",
-          "example": "Front-end 2"
-        },
-        "status": {
-          "type": "string",
-          "example": "Выполнено",
-          "enum": [
-            "Провалено",
-            "Не началось",
-            "В работе",
-            "На проверке",
-            "Выполнено"
-          ]
-        },
-        "score": {
-          "type": "integer",
-          "format": "int64",
-          "example": 3
-        }
+    }
+  },
+  "token": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "token": {
+        "type": "string",
+        "format": "30",
+        "example": "sdll34nlfl4f"
       }
-    },
-    "Homework": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "example": 12
-        },
-        "name": {
-          "type": "string",
-          "example": "Front-end 2"
-        },
-        "number": {
-          "type": "number",
-          "format": "int64",
-          "example": 7
-        },
-        "url": {
-          "type": "string",
-          "example": "https://github.com/2UP/interns-portal-api/blob/master/README.md"
-        },
-        "course": {
-          "$ref": "#/definitions/InternshipCourse"
-        },
-        "start_date": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2018-10-31 09:45:36"
-        },
-        "deadline": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2018-10-31 09:45:36"
-        }
-      }
-    },
-    "InternshipCourse": {
-      "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "example": 12
-        },
-        "name": {
-          "type": "string",
-          "example": "Front-end 2"
-        }
+    }
+  },
+  "auth": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "id": {
+        "type": "integer",
+        "format": "int64",
+        "example": "1"
+      },
+      "name": {
+        "type": "string",
+        "format": "200",
+        "example": "Ivanov Ivan"
+      },
+      "email": {
+        "type": "string",
+        "format": "200",
+        "example": "asdasd@gmail.com"
+      },
+      "role": {
+        "type": "string",
+        "format": "10",
+        "example": "User"
+      },
+      "banned": {
+        "type": "boolean",
+        "example": "true",
+        "enum": [
+          "Banned",
+          "User",
+          "Admin"
+        ]
       }
     }
   }

@@ -11,7 +11,7 @@ namespace App\Enums;
 use BenSampo\Enum\Enum;
 
 
-class UserType extends Enum
+final class UserType extends Enum
 {
     const Admin = "Admin";
     const User = "User";
