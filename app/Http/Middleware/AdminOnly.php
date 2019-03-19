@@ -19,7 +19,7 @@ class AdminOnly
         if ($request->user()->role == UserType::Admin) {
             return $next($request);
         }
-        abort(403, "вы не админ");
+        abort(403);
 
     }
 }

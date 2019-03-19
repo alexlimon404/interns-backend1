@@ -9,16 +9,16 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-
-        <testsuite name="Feature">
+        <testsuite name="UserControllerTests">
             <directory suffix="UserControllerTests.php">./tests/Feature/Http/Controllers</directory>
+        </testsuite>
+
+        <testsuite name="ClearBase">
+            <directory suffix="ClearBase.php">./tests/Feature</directory>
+        </testsuite>
+
+        <testsuite name="Feature">
+            <directory suffix="AuthControllerTests.php">./tests/Feature/Http/Controllers</directory>
         </testsuite>
     </testsuites>
     <filter>

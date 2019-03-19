@@ -27,7 +27,7 @@ class GitHubRepositoriesSearchRequest extends FormRequest
             'fromDb' => 'required|boolean',
             'page' => 'string|min:1',
             'perPage' => 'integer|between:1,10',
-            'title' => 'string|max:100',
+            'title' => 'string|max:200',
             'private' => 'boolean',
             'language' => 'string|max:3',
         ];

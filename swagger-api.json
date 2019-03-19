@@ -1,0 +1,615 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "Interns portal API"
+  },
+  "host": "api.learn.2-up.ru",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "group",
+      "description": "Operations about user"
+    },
+    {
+      "name": "auth",
+      "description": "Operations about Auth user"
+    },
+    {
+      "name": "permissions",
+      "description": "Operations about user permissions [Admin only]"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/api/v0/users/group": {
+      "post": {
+        "tags": [
+          "group"
+        ],
+        "summary": "Post user by Name",
+        "description": "create new group",
+        "operationId": "postUserByName",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Group Name",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/user/{userId}/groups": {
+      "get": {
+        "tags": [
+          "group"
+        ],
+        "summary": "Get groups by Id users",
+        "description": "Get all groups by User",
+        "operationId": "getUserById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Id User",
+            "required": true,
+            "type": "integer",
+            "format": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/users/groups/{groupId}": {
+      "delete": {
+        "tags": [
+          "group"
+        ],
+        "summary": "Delete groups by Id",
+        "description": "Delete group by Id",
+        "operationId": "deleteUsersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "Id group",
+            "required": true,
+            "type": "integer",
+            "format": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/user/{userId}/group/{groupId}": {
+      "post": {
+        "tags": [
+          "group"
+        ],
+        "summary": "Post user by Name",
+        "description": "add user by group",
+        "operationId": "postUserByGroup",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id",
+            "required": true,
+            "type": "integer",
+            "format": "200"
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "Group Id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v0/user/{userId}/group2/{groupId}": {
+      "delete": {
+        "tags": [
+          "group"
+        ],
+        "summary": "Delete user in group",
+        "description": "Delete user in group",
+        "operationId": "deleteUserInGroup",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Id user",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "Id group",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get api by email and password",
+        "description": "Get api by email and password",
+        "operationId": "getApiByEmail&password",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "email",
+            "required": true,
+            "type": "integer",
+            "format": "200"
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "description": "password",
+            "required": true,
+            "type": "integer",
+            "format": "200"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get new Api By Old Api",
+        "description": "Get new Api By Old Api",
+        "operationId": "getNewApiByOldApi",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "api_token",
+            "in": "path",
+            "description": "api_token",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/": {
+      "get": {
+        "tags": [
+          "permissions"
+        ],
+        "summary": "Get new Api By Old Api",
+        "description": "Get new Api By Old Api",
+        "operationId": "getAllUsers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "api_token",
+            "in": "path",
+            "description": "api_token",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          },
+          {
+            "name": "page",
+            "in": "path",
+            "description": "page",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch:": {
+        "tags": [
+          "permissions"
+        ],
+        "operationId": "patchInfoUserByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "userId",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          },
+          {
+            "name": "api_token",
+            "in": "path",
+            "description": "api_token",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "name",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          },
+          {
+            "name": "role",
+            "in": "path",
+            "description": "role",
+            "required": true,
+            "type": "string",
+            "format": "200"
+          },
+          {
+            "name": "banned",
+            "in": "path",
+            "description": "banned",
+            "required": true,
+            "type": "boolean",
+            "format": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "create_group": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": [
+        "login",
+        "email"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "someuser"
+        },
+        "role": {
+          "type": "string",
+          "example": "User",
+          "enum": [
+            "Banned",
+            "User",
+            "Employee",
+            "Admin"
+          ]
+        },
+        "course": {
+          "$ref": "#/definitions/InternshipCourse"
+        }
+      }
+    },
+    "InternHomework": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 12
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 12
+        },
+        "homework": {
+          "$ref": "#/definitions/Homework"
+        },
+        "github_uri": {
+          "type": "string",
+          "example": "Front-end 2"
+        },
+        "status": {
+          "type": "string",
+          "example": "Выполнено",
+          "enum": [
+            "Провалено",
+            "Не началось",
+            "В работе",
+            "На проверке",
+            "Выполнено"
+          ]
+        },
+        "score": {
+          "type": "integer",
+          "format": "int64",
+          "example": 3
+        }
+      }
+    },
+    "Homework": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 12
+        },
+        "name": {
+          "type": "string",
+          "example": "Front-end 2"
+        },
+        "number": {
+          "type": "number",
+          "format": "int64",
+          "example": 7
+        },
+        "url": {
+          "type": "string",
+          "example": "https://github.com/2UP/interns-portal-api/blob/master/README.md"
+        },
+        "course": {
+          "$ref": "#/definitions/InternshipCourse"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-10-31 09:45:36"
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-10-31 09:45:36"
+        }
+      }
+    },
+    "InternshipCourse": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 12
+        },
+        "name": {
+          "type": "string",
+          "example": "Front-end 2"
+        }
+      }
+    }
+  }
+}

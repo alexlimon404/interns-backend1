@@ -11,9 +11,7 @@ class UserControllerTests extends TestCase
 {
     /**
      * 1.Роут
-     *
      */
-
     public function test_addGroup_ReturnJson ()
     {
         $str_random = str_random(10);
@@ -21,10 +19,10 @@ class UserControllerTests extends TestCase
         $response->assertStatus(200);
         $response->assertJson(["success" => true]);
     }
+
     /**
      * 2.
      * */
-
     public function test_getGroupsUser_ReturnJson ()
     {
         FunctionsForTests::createUsers(3);
@@ -33,12 +31,11 @@ class UserControllerTests extends TestCase
         $response = $this->get('api/v0/user/2/groups');
         $response->assertStatus(200);
         $response->assertJson(["success" => true]);
-
     }
-    /**
-     *
-     * */
 
+    /**
+     * 3.
+     * */
     public function test_delGroup_ReturnJson ()
     {
         FunctionsForTests::createGroups(3);
@@ -47,6 +44,9 @@ class UserControllerTests extends TestCase
         $response->assertJson(["success" => true]);
     }
 
+    /**
+     * 4.
+     * */
     public function test_addUserInGroup_ReturnJson ()
     {
         FunctionsForTests::createUsers(3);
@@ -56,6 +56,9 @@ class UserControllerTests extends TestCase
         $response->assertJson(["success" => true]);
     }
 
+    /**
+     * 5.
+     * */
     public function test_delUserInGroup ()
     {
         FunctionsForTests::createUsers(3);

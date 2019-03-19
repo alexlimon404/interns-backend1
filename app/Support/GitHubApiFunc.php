@@ -10,12 +10,12 @@ use App\Models\GitHub\GitHubIssues;
 
 class GitHubApiFunc
 {
-/**
- * @param string $userName
- * @param string $repositoryName
- *
- * @return array $issuesArr
- * */
+    /**
+     * @param string $userName
+     * @param string $repositoryName
+     *
+     * @return array $issuesArr
+     * */
     public static function getIssues($userName, $repositoryName)
     {
         $userId = GitHubUsers::where('username', $userName)->firstOrFail();
@@ -25,13 +25,13 @@ class GitHubApiFunc
         return $issuesArr;
     }
 
-/**
- * @param string $userName
- * @param array $issues
- * @param string $repositoryName
- *
- * @return boolean
- * */
+    /**
+     * @param string $userName
+     * @param array $issues
+     * @param string $repositoryName
+     *
+     * @return boolean
+     * */
     public static function createNewIssues($userName, $issues, $repositoryName)
     {
         //запись нового user'a
@@ -53,12 +53,12 @@ class GitHubApiFunc
         }
         return true;
     }
-/**
- * @param array $repos
- * @param string $userName
- *
- * @return array
- * */
+    /**
+     * @param array $repos
+     * @param string $userName
+     *
+     * @return array
+     * */
     public static function createNewRepositories($repos, $userName)
     {
         //запись нового user'a
@@ -78,11 +78,11 @@ class GitHubApiFunc
         }
         return $repositories;
     }
-/**
- * @param string $userName
- *
- * @return array
- * */
+    /**
+     * @param string $userName
+     *
+     * @return array
+     * */
     public static function getRepositories($userName)
     {
         $user = GitHubUsers::where('username', $userName)->firstOrFail();
@@ -92,20 +92,20 @@ class GitHubApiFunc
             $data = [
                 "id" => $rep->id,
                 "github_id" => $rep->github_id,
-                "name" => $userName,
+                "name" => $rep->name,
                 "description" => $rep->description
             ];
             array_push($result, $data);
         }
         return $result;
     }
-/**
- * @param array $repositories
- * @param $client
- * @param string $userName
- *
- * @return boolean
- * */
+    /**
+     * @param array $repositories
+     * @param $client
+     * @param string $userName
+     *
+     * @return boolean
+     * */
     public static function createNewIssuesForAllRepositories($repositories, $client, $userName)
     {
         foreach ($repositories as $repo){
@@ -127,12 +127,12 @@ class GitHubApiFunc
         }
         return true;
     }
-/**
- * @param string $userName
- * @param  $request
- *
- * @return array
- * */
+    /**
+     * @param string $userName
+     * @param  $request
+     *
+     * @return array
+     * */
     public static function findInIssuesForAllRepositories($userName, $request)
     {
         $user = GitHubUsers::where('username', $userName)->firstOrFail();
@@ -167,9 +167,9 @@ class GitHubApiFunc
         return $repositorySearch;
     }
 
-/**
- *
- */
+    /**
+     *
+     */
     public static function paginate($items, $perPage = null, $currentPage = null, array $options = [])
     {
         $currentPage = $currentPage ? : 1;

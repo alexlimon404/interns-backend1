@@ -18,6 +18,7 @@ class AuthorizedController extends Controller
      * 1. GET api/v1/auth/login
      * нужно вернуть api_token из таблицы users
      * если комбинация email & пароля неправильная, вернуть: 401 - Unauthorized
+     * сделать hash для тестов dd(Hash::make(123));
      * */
     public function emailPass(Request $request)
     {
@@ -35,6 +36,7 @@ class AuthorizedController extends Controller
             ]
         ]);
     }
+
     /**
      * 2. GET api/v1/auth/logout/{api}
      * нужно найти юзера по токену (если не найден вернуть 404)
@@ -42,7 +44,6 @@ class AuthorizedController extends Controller
      * @return JSON
      *
      * */
-
     public function takeNewApi($api)
     {
         if (!User::where('api_token', $api)->firstOrFail()) {
@@ -56,12 +57,12 @@ class AuthorizedController extends Controller
             "success" => true,
         ]);
     }
+
     /**
      * 3. GET api/v1/users?=API
      *
      * @return JSON
      * */
-
     public function users ()
     {
         $perPage = 5;

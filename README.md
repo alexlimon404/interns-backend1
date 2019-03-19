@@ -27,18 +27,18 @@ task4.2
 * добавлен 3-4 роут
 * исправлены ошибки
 
-task5.1
+task 5.1
 ---
 * добавлен второй роут
 
-task5.2
+task 5.2
 ---
 * добавлен 3 роут
 * task5.3
 * исправленны ошибки
 *добавлен 4 роут
 
-task6
+task 6.0
 ---
 * done
 
@@ -49,7 +49,7 @@ task 7.0
 * creating Jobs php artisan make:job
 * done
 * исправлены ошибки Task4
-***
+
 task 8.0
 ---
 Сделаны тесты для task3
@@ -58,5 +58,11 @@ task 8.0
 .\vendor\bin\phpunit ./tests/Feature/ClearBase.php
 .\vendor\bin\phpunit ./tests/Feature/Http/Controllers/UserControllerTests.php
 .\vendor\bin\phpunit --configuration phpunit.xml
+.\vendor\bin\phpunit ./tests/Feature/Http/Controllers/AuthControllerTests.php
 ```
+task 8.1
 ---
+* исправлены ошибки в task5
+* добавлены тесты ддя task4
+* добавлен Swagger
+

@@ -2,7 +2,10 @@
 
 namespace Tests\Support;
 
+use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 
 class FunctionsForTests
 {
@@ -22,7 +25,6 @@ class FunctionsForTests
                 'user_id' => $i,
             ]);
         }
-
     }
 
     public static function createGroups ($amount = null)
@@ -32,7 +34,6 @@ class FunctionsForTests
             DB::table('user_group')->insert([
                 'name' => 'UserGroup ' . $i . ' - ' . str_random(1)
             ]);
-
         }
     }
 
@@ -45,9 +46,32 @@ class FunctionsForTests
                 'group_id' => $i
             ]);
         }
-
     }
 
+    public static function createOneUsers ($role = null, $name = null, $email = null, $api_token = null)
+    {
+        $role = $role ? : 'User';
+        $name = $name ? : 'Valera';
+        $email = $email ? : 'email@email.com';
+        $api_token = $api_token ? : 1234;
+
+        $password = Hash::make(123);
+        $user = new User;
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = $password;
+        $user->api_token = $api_token;
+        $user->role = $role;
+        $user->save();
+        return $user;
+    }
+
+    public static function delUser ($name = null)
+    {
+        $name = $name ? : 'Valera';
+        $user = User::where('name', $name);
+        $user->delete();
+    }
 
 
 }

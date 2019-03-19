@@ -27,7 +27,7 @@ class GitHubIssuesSearchRequest extends FormRequest
             'fromDb' => 'required|boolean',
             'page' => 'string|min:1',
             'perPage' => 'integer|between:1,10',
-            'title' => 'string|max:100',
+            'title' => 'string|max:200',
             'state' => 'string|max:10',
             'number' => 'integer'
         ];
